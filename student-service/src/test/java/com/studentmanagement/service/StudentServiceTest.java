@@ -5,6 +5,7 @@ import com.studentmanagement.exception.DuplicateResourceException;
 import com.studentmanagement.exception.ResourceNotFoundException;
 import com.studentmanagement.model.Student;
 import com.studentmanagement.repository.StudentRepository;
+import com.studentmanagement.student.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
