@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/infrastructure_db
+    username: postgres
+    password: Raji@1234
+    driver-class-name: org.postgresql.Driver

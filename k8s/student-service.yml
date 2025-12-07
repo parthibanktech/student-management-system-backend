@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: student-service
+  template:
+    metadata:
+      labels:
+        app: student-service
+    spec:
+      containers:
+      - name: student-service
+        image: parthibanktech3/student-service:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgres-service:5432/student_db"
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: "http://discovery-service:8761/eureka/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-service
+spec:
+  selector:
+    app: student-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

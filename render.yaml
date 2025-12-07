@@ -1,0 +1,82 @@
+services:
+  # Discovery Service
+  - type: pserv
+    name: discovery-service
+    env: docker
+    dockerContext: ./backend/discovery-service
+    dockerfilePath: ./backend/discovery-service/Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+  # API Gateway
+  - type: pserv
+    name: api-gateway
+    env: docker
+    dockerContext: ./backend/api-gateway
+    dockerfilePath: ./backend/api-gateway/Dockerfile
+    plan: free
+    envVars:
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://discovery-service:8761/eureka/
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+  # Student Service
+  - type: pserv
+    name: student-service
+    env: docker
+    dockerContext: ./backend/student-service
+    dockerfilePath: ./backend/student-service/Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://discovery-service:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        sync: false # Set manually in Render Dashboard
+
+  # Course Service
+  - type: pserv
+    name: course-service
+    env: docker
+    dockerContext: ./backend/course-service
+    dockerfilePath: ./backend/course-service/Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://discovery-service:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+
+  # Enrollment Service
+  - type: pserv
+    name: enrollment-service
+    env: docker
+    dockerContext: ./backend/enrollment-service
+    dockerfilePath: ./backend/enrollment-service/Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://discovery-service:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+
+  # Notification Service
+  - type: pserv
+    name: notification-service
+    env: docker
+    dockerContext: ./backend/notification-service
+    dockerfilePath: ./backend/notification-service/Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://discovery-service:8761/eureka/

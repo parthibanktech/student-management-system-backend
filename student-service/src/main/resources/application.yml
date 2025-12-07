@@ -1,0 +1,26 @@
+server:
+  port: 4001
+spring:
+  application:
+    name: student-service
+  profiles:
+    active: dev
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    topic:
+      student-events: student-events-topic
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+app:
+  cors:
+    allowed-origins: http://localhost:4200,http://localhost:3000
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: false

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-service
+  namespace: student-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: course-service
+  template:
+    metadata:
+      labels:
+        app: course-service
+    spec:
+      containers:
+      - name: course-service
+        image: your-dockerhub-username/course-service:latest
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgres-service:5432/student_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-service
+  namespace: student-system
+spec:
+  selector:
+    app: course-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8082
+  type: LoadBalancer
