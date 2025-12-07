@@ -191,6 +191,87 @@
       - microservices-net
     restart: on-failure
 
+  # Payment Service
+  payment-service:
+    image: ${DOCKERHUB_USERNAME:-studentmgmt}/payment-service:latest
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "4004:4004"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/payment_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: on-failure
+
+  # Library Service
+  library-service:
+    image: ${DOCKERHUB_USERNAME:-studentmgmt}/library-service:latest
+    build:
+      context: ./library-service
+      dockerfile: Dockerfile
+    container_name: library-service
+    ports:
+      - "4005:4005"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/library_db
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+    depends_on:
+      postgres:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: on-failure
+
+  # Infrastructure Service
+  infrastructure-service:
+    image: ${DOCKERHUB_USERNAME:-studentmgmt}/infrastructure-service:latest
+    build:
+      context: ./infrastructure-service
+      dockerfile: Dockerfile
+    container_name: infrastructure-service
+    ports:
+      - "4006:4006"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/infrastructure_db
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+    depends_on:
+      postgres:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: on-failure
+
   # Nginx Load Balancer
   nginx:
     image: nginx:alpine
@@ -206,8 +287,6 @@
       - microservices-net
     restart: always
 
-volumes:
-  postgres-data:
 
 
 networks:
