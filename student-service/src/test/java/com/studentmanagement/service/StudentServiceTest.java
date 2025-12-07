@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +58,7 @@ class StudentServiceTest {
 
     @Test
     void getAllStudents_ShouldReturnListOfStudents() {
-        when(studentRepository.findAll()).thenReturn(Arrays.asList(student));
+        when(studentRepository.findAll()).thenReturn(Collections.singletonList(student));
 
         List<StudentDTO> result = studentService.getAllStudents();
 
