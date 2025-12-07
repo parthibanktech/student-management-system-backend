@@ -289,6 +289,9 @@
 
 
 
+volumes:
+  postgres-data:
+
 networks:
   microservices-net:
     driver: bridge

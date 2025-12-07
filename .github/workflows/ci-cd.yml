@@ -1,0 +1,138 @@
+name: Backend CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build Backend Services
+      run: mvn clean package -DskipTests
+      # No working-directory needed if this repo IS the backend root
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and Push Discovery Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./discovery-service
+        push: true
+        tags: parthibanktech3/discovery-service:latest
+
+    - name: Build and Push API Gateway
+      uses: docker/build-push-action@v4
+      with:
+        context: ./api-gateway
+        push: true
+        tags: parthibanktech3/api-gateway:latest
+
+    - name: Build and Push Student Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./student-service
+        push: true
+        tags: parthibanktech3/student-service:latest
+
+    - name: Build and Push Course Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./course-service
+        push: true
+        tags: parthibanktech3/course-service:latest
+
+    - name: Build and Push Enrollment Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./enrollment-service
+        push: true
+        tags: parthibanktech3/enrollment-service:latest
+
+    - name: Build and Push Payment Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./payment-service
+        push: true
+        tags: parthibanktech3/payment-service:latest
+
+    - name: Build and Push Notification Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./notification-service
+        push: true
+        tags: parthibanktech3/notification-service:latest
+
+    - name: Build and Push Infrastructure Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./infrastructure-service
+        push: true
+        tags: parthibanktech3/infrastructure-service:latest
+
+    - name: Build and Push Library Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./library-service
+        push: true
+        tags: parthibanktech3/library-service:latest
+
+  deploy-to-ec2:
+    needs: build-and-push-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Copy docker-compose to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          source: "docker-compose.yml,nginx.conf"
+          target: "/home/${{ secrets.EC2_USER }}/student-management-system"
+          strip_components: 0
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/${{ secrets.EC2_USER }}/student-management-system
+            
+            # Create .env file for secrets
+            echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" > .env
+            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
+            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+            echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+            
+            echo "Deployment script executed. Restarting services..."
+            # Clean up old containers
+            docker-compose down || true
+            
+            # Pull latest images
+            docker-compose pull
+            
+            # Start services
+            docker-compose up -d --remove-orphans
