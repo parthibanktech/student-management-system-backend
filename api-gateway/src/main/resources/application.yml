@@ -26,43 +26,43 @@ spring:
             allowed-headers: "*"
       routes:
         - id: student-service
-          uri: http://127.0.0.1:4001
+          uri: lb://student-service
           predicates:
             - Path=/api/v1/students/**
           filters:
             - StripPrefix=2
         - id: course-service
-          uri: http://127.0.0.1:4002
+          uri: lb://course-service
           predicates:
             - Path=/api/v1/courses/**
           filters:
             - StripPrefix=2
         - id: enrollment-service
-          uri: http://127.0.0.1:4003
+          uri: lb://enrollment-service
           predicates:
             - Path=/api/v1/enrollments/**
           filters:
             - StripPrefix=2
         - id: notification-service
-          uri: http://127.0.0.1:4010
+          uri: lb://notification-service
           predicates:
             - Path=/api/v1/notifications/**
           filters:
             - StripPrefix=2
         - id: library-service
-          uri: http://127.0.0.1:4005
+          uri: lb://library-service
           predicates:
             - Path=/api/v1/library/**
           filters:
             - StripPrefix=2
         - id: payment-service
-          uri: http://127.0.0.1:4004
+          uri: lb://payment-service
           predicates:
             - Path=/api/v1/payments/**
           filters:
             - StripPrefix=2
         - id: infrastructure-service
-          uri: http://127.0.0.1:4006
+          uri: lb://infrastructure-service
           predicates:
             - Path=/api/v1/infrastructure/**
           filters:

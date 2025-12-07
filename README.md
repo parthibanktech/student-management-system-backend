@@ -17,13 +17,13 @@ The system is decomposed into loosely coupled services, each responsible for a s
 ### System Topology
 ```mermaid
 graph TD
-    Client[Web/Mobile Client] --> Gateway[API Gateway :80]
+    Client[Web/Mobile Client] --> Gateway[API Gateway / Load Balancer :4000]
     Gateway --> Discovery[Eureka Registry :8761]
     
     %% Core Services
-    Gateway --> Student[Student Service :8080]
-    Gateway --> Course[Course Service :8082]
-    Gateway --> Enroll[Enrollment Service :8083]
+    Gateway --> Student[Student Service :4001]
+    Gateway --> Course[Course Service :4002]
+    Gateway --> Enroll[Enrollment Service :4003]
     
     %% Support Services
     Gateway --> Payment[Payment Service :4004]
@@ -33,7 +33,7 @@ graph TD
     %% Async Communication
     Enroll --> Kafka{Apache Kafka}
     Payment --> Kafka
-    Kafka --> Notify[Notification Service :8081]
+    Kafka --> Notify[Notification Service :4010]
     
     %% Databases
     Student --> DB1[(Student DB)]
@@ -62,14 +62,14 @@ This architecture implements **Client-Side Load Balancing** using Spring Cloud G
 | Service | Port | Tech Stack | Description |
 | :--- | :--- | :--- | :--- |
 | **Discovery Service** | `8761` | Netflix Eureka | Service registry and discovery server. |
-| **API Gateway** | `80` | Spring Cloud Gateway | Unified entry point, routing, and load balancing. |
-| **Student Service** | `8080` | Spring Data JPA | Manages student profiles and academic records. |
-| **Course Service** | `8082` | Spring Data JPA | Handles course catalog, credits, and metadata. |
-| **Enrollment Service** | `8083` | Spring WebClient, Kafka | Orchestrates course sign-ups and publishes events. |
-| **Notification Service** | `8081` | Spring Kafka | Consumes events to send emails/alerts (Simulated). |
+| **API Gateway** | `4000` | Spring Cloud Gateway | Unified entry point, routing, and load balancing. |
+| **Student Service** | `4001` | Spring Data JPA | Manages student profiles and academic records. |
+| **Course Service** | `4002` | Spring Data JPA | Handles course catalog, credits, and metadata. |
+| **Enrollment Service** | `4003` | Spring WebClient, Kafka | Orchestrates course sign-ups and publishes events. |
 | **Payment Service** | `4004` | Spring Data JPA, Kafka | Handles billing, payment processing, and transaction history. |
 | **Library Service** | `4005` | Spring Data JPA | Manages book inventory and lending operations. |
 | **Infrastructure Service** | `4006` | Spring Data JPA | Manages classrooms, labs, and facility resources. |
+| **Notification Service** | `4010` | Spring Kafka | Consumes events to send emails/alerts (Simulated). |
 
 ---
 
@@ -116,7 +116,7 @@ docker-compose up -d --build
 
 ## 🔌 API Endpoints
 
-All requests should be routed through the **API Gateway** running on port `80`.
+All requests should be routed through the **API Gateway** running on port `4000`.
 
 | Domain | Method | Endpoint | Description |
 | :--- | :--- | :--- | :--- |
