@@ -2,6 +2,8 @@ spring:
   config:
     activate:
       on-profile: prod
+  server:
+    port: 0
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 eureka:

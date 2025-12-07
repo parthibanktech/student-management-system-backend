@@ -138,3 +138,18 @@ All requests should be routed through the **API Gateway** running on port `4000`
 - **Service Decoupling**: Services interact via REST (sync) and Kafka (async) to avoid tight coupling.
 - **Environment Configuration**: Dockerized environment variables for seamless dev-to-prod transition.
 - **Resilience**: Fault tolerance via Gateway timeouts and Eureka registry.
+
+---
+
+## 🔒 Production Deployment & Security
+
+### Dynamic Scaling
+In the `prod` profile, all microservices are configured with `server.port: 0`. This enables **Operating System level random port allocation**, allowing you to run multiple instances of the same service on a single node without port conflicts.
+
+### AWS / Cloud Security
+Since services run on random ports, **you do NOT need to open these ports to the public internet**.
+
+*   **Public Access**: Open ONLY ports `80` (HTTP) and `443` (HTTPS) for the **API Gateway**.
+*   **Internal Access**: Configure your AWS **Security Group** to allow "All TCP" traffic **only from within the VPC CIDR block** (e.g., `10.0.0.0/16`).
+    *   This allows the Gateway to talk to Microservices, and Microservices to talk to each other (and Eureka) on ANY ephemeral port.
+    *   **Result**: The outside world can ONLY access your app via the Secure API Gateway.
