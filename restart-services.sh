@@ -34,7 +34,7 @@ sudo docker-compose up -d enrollment-service
 echo "Waiting 15 seconds..."
 sleep 15
 
-echo "Starting remaining services..."
-sudo docker-compose up -d
+# echo "Starting remaining services..."
+# sudo docker-compose up -d
 echo "All services started sequentially. Checking status..."
 sudo docker ps
