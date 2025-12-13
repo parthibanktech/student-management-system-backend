@@ -284,6 +284,14 @@ services:
       - microservices-net
     restart: on-failure
 
+  # Frontend Service
+  frontend:
+    image: parthibanktech3/student-management-frontend:latest
+    container_name: frontend
+    restart: always
+    networks:
+      - microservices-net
+
   # Nginx Load Balancer
   nginx:
     image: nginx:alpine
