@@ -158,6 +158,25 @@ services:
     image: ${DOCKERHUB_USERNAME:-parthibanktech3}/course-service:latest
     build:
       context: ./course-service
+      dockerfile: Dockerfile
+    container_name: course-service
+    ports:
+      - "4002:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/student_db
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: on-failure
+
+  # Enrollment Service
+  enrollment-service:
     image: ${DOCKERHUB_USERNAME:-parthibanktech3}/enrollment-service:latest
     build:
       context: ./enrollment-service
