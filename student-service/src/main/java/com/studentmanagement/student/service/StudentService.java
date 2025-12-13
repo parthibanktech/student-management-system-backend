@@ -125,7 +125,7 @@ public class StudentService {
 
         // Publish a 'CREATED' event to Kafka so other services can react (e.g., send
         // welcome email)
-        publishEvent("CREATED", savedStudent);
+        // publishEvent("CREATED", savedStudent);
 
         // Convert the saved entity back to a DTO and return it
         return convertToDTO(savedStudent);
@@ -335,17 +335,16 @@ public class StudentService {
 
     public List<StudentDTO> addAllStudents(List<StudentDTO> studDTO) {
 
-              // Convert all DTOs to entities
+        // Convert all DTOs to entities
         List<Student> entities = studDTO.stream()
                 .map(this::convertToEntity)
                 .toList();
 
-        List<Student>  s = studentRepository.saveAll(entities);
+        List<Student> s = studentRepository.saveAll(entities);
 
         s.forEach(s1 -> publishEvent("CREATED", s1));
 
         return s.stream().map(this::convertToDTO).toList();
-
 
     }
 }
