@@ -116,6 +116,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/student_db
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
     depends_on:
       postgres:
         condition: service_healthy
@@ -166,6 +170,10 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/student_db
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
     depends_on:
       postgres:
         condition: service_healthy
@@ -190,6 +198,10 @@ services:
       SERVICES_STUDENT_URL: http://student-service:8080/api/v1
       SERVICES_COURSE_URL: http://course-service:8082/api/v1
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
     depends_on:
       postgres:
         condition: service_healthy
