@@ -68,7 +68,7 @@ services:
 
   # Discovery Service
   discovery-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/discovery-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/discovery-service:latest
     build:
       context: ./discovery-service
       dockerfile: Dockerfile
@@ -86,7 +86,7 @@ services:
 
   # API Gateway
   api-gateway:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/api-gateway:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/api-gateway:latest
     build:
       context: ./api-gateway
       dockerfile: Dockerfile
@@ -104,7 +104,7 @@ services:
 
   # Student Service
   student-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/student-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/student-service:latest
     build:
       context: ./student-service
       dockerfile: Dockerfile
@@ -129,7 +129,7 @@ services:
 
   # Notification Service
   notification-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/notification-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/notification-service:latest
     build:
       context: ./notification-service
       dockerfile: Dockerfile
@@ -155,7 +155,7 @@ services:
 
   # Course Service
   course-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/course-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/course-service:latest
     build:
       context: ./course-service
       dockerfile: Dockerfile
@@ -177,7 +177,7 @@ services:
 
   # Enrollment Service
   enrollment-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/enrollment-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/enrollment-service:latest
     build:
       context: ./enrollment-service
       dockerfile: Dockerfile
@@ -205,7 +205,7 @@ services:
 
   # Payment Service
   payment-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/payment-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/payment-service:latest
     build:
       context: ./payment-service
       dockerfile: Dockerfile
@@ -234,7 +234,7 @@ services:
 
   # Library Service
   library-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/library-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/library-service:latest
     build:
       context: ./library-service
       dockerfile: Dockerfile
@@ -260,7 +260,7 @@ services:
 
   # Infrastructure Service
   infrastructure-service:
-    image: ${DOCKERHUB_USERNAME:-studentmgmt}/infrastructure-service:latest
+    image: ${DOCKERHUB_USERNAME:-parthibanktech3}/infrastructure-service:latest
     build:
       context: ./infrastructure-service
       dockerfile: Dockerfile
