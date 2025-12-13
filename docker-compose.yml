@@ -120,6 +120,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       DB_USERNAME: postgres
       DB_PASSWORD: password
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_STACKTRACE: always
     depends_on:
       postgres:
         condition: service_healthy

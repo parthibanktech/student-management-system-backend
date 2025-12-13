@@ -44,10 +44,17 @@ public class StudentController {
      */
 
     @PostMapping
-    public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<?> createStudent(@Valid @RequestBody StudentDTO studentDTO) {
         log.info("POST /students - Creating new student");
-        StudentDTO createdStudent = studentService.createStudent(studentDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
+        try {
+            StudentDTO createdStudent = studentService.createStudent(studentDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
+        } catch (Exception e) {
+            System.err.println("CRITICAL ERROR in createStudent: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Server Error: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+        }
     }
 
     @PostMapping("/addMore")
