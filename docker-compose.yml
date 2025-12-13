@@ -1,4 +1,15 @@
- services:
+#git  =========================================================================================
+# DOCKER COMPOSE CONFIGURATION
+# =========================================================================================
+# This file defines the entire microservices architecture for the Student Management System.
+# It allows you to spin up all services, databases, and message brokers with a single command:
+#   docker-compose up -d
+#
+# NETWORK:
+# All services are connected to a custom bridge network called 'microservices-net'.
+# This allows them to communicate using their service names (e.g., http://student-service:8080).
+#
+services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
@@ -11,6 +22,7 @@
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - microservices-net
     healthcheck:
@@ -287,11 +299,11 @@
       - microservices-net
     restart: always
 
-
-
 volumes:
   postgres-data:
+
 
 networks:
   microservices-net:
     driver: bridge
+    name: microservices-net
