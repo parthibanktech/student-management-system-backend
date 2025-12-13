@@ -92,7 +92,7 @@ services:
       dockerfile: Dockerfile
     container_name: api-gateway
     ports:
-      - "4010:8080"
+      - "4000:4000"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
     depends_on:

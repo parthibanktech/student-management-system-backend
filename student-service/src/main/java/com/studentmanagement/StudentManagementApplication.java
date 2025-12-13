@@ -12,9 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * Main Application Class for Student Management Microservice
@@ -24,6 +22,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableAsync
 public class StudentManagementApplication {
 
     public static void main(String[] args) {
