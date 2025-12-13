@@ -153,3 +153,39 @@ Since services run on random ports, **you do NOT need to open these ports to the
 *   **Internal Access**: Configure your AWS **Security Group** to allow "All TCP" traffic **only from within the VPC CIDR block** (e.g., `10.0.0.0/16`).
     *   This allows the Gateway to talk to Microservices, and Microservices to talk to each other (and Eureka) on ANY ephemeral port.
     *   **Result**: The outside world can ONLY access your app via the Secure API Gateway.
+
+---
+
+## 🐛 Troubleshooting & Deployment Issues
+
+Here is a summary of real-world errors encountered during the AWS Deployment and how they were resolved. This is useful for interview discussions on debugging and DevOps.
+
+### 1. `service "nginx" refers to undefined network`
+*   **Problem**: Docker Compose failed with an "invalid compose project" error.
+*   **Cause**: The `docker-compose.yml` file had a duplicate `driver: bridge` key in the `networks` configuration, making the YAML invalid.
+*   **Resolution**: Cleaned up the `networks` section to remove the duplicate line.
+
+### 2. `Connection Refused` on Browser (Public IP)
+*   **Problem**: The application was deployed, but the browser could not connect to the EC2 Public IP.
+*   **Cause**: Nginx was listening on port `4000` (mapped `4000:80` in Compose), but browsers default to port `80`.
+*   **Resolution**: Changed Nginx port mapping to `80:80` in `docker-compose.yml` so it accepts standard HTTP traffic.
+
+### 3. `failed to solve: lstat /target: no such file`
+*   **Problem**: Deployment failed during the `docker build` step on EC2.
+*   **Cause**: The GitHub repository does NOT contain the `/target` folder (it's ignored). When building on EC2, the `COPY target/*.jar` instruction failed because the JARs didn't exist there.
+*   **Resolution**: Switched to using **Pre-built Docker Images**. Instead of building on the server, we build images in GitHub Actions, push to Docker Hub, and simply `pull` them on EC2 (`image: ...` instead of `build: ...`).
+
+### 4. `No such image: studentmgmt/...`
+*   **Problem**: Docker Compose couldn't find the images to pull.
+*   **Cause**: The `docker-compose.yml` defaulted to the user `studentmgmt` (`${DOCKERHUB_USERNAME:-studentmgmt}`), but our CI/CD pipeline pushed images to `parthibanktech3`.
+*   **Resolution**: Updated `docker-compose.yml` variables to default to `parthibanktech3` to match the registry.
+
+### 5. `no main manifest attribute, in app.jar`
+*   **Problem**: Containers started but immediately crashed. Logs showed "no main manifest attribute".
+*   **Cause**: The JAR files were built without the `spring-boot-maven-plugin`. This meant they were standard library JARs, not **executable** Spring Boot JARs (which require a specific `MANIFEST.MF` entry).
+*   **Resolution**: Added `<build><plugins><plugin>spring-boot-maven-plugin...</plugin>...</plugins></build>` to the parent `pom.xml` and triggered a rebuild.
+
+### 6. `Bind for 0.0.0.0:4006 failed: port is already allocated`
+*   **Problem**: One of the services (`notification-service`) failed to start.
+*   **Cause**: Port Conflict. Both `notification-service` and `infrastructure-service` were configured to use host port `4006` in `docker-compose.yml`.
+*   **Resolution**: Changed `infrastructure-service` host port mapping to `4007:4006`.
