@@ -133,9 +133,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: "backend/docker-compose.yml,backend/nginx.conf,backend/init-databases.sql"
+          source: "docker-compose.yml,nginx.conf,init-databases.sql"
           target: "/home/${{ secrets.EC2_USER }}/student-management-system"
-          strip_components: 1
+          strip_components: 0
 
       # 2. Execute Deployment Commands on EC2 via SSH
       - name: Deploy to EC2
