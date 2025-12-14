@@ -1,0 +1,30 @@
+name: Debug Production EC2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Docker Containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            echo "=== MEMORY USAGE ==="
+            free -h
+            echo ""
+            echo "=== DOCKER CONTAINERS STATUS ==="
+            docker ps -a
+            echo ""
+            echo "=== DISCOVERY SERVICE LOGS ==="
+            docker logs discovery-service --tail 50 || echo "Discovery Service logs not found"
+            echo ""
+            echo "=== API GATEWAY LOGS ==="
+            docker logs api-gateway --tail 50 || echo "API Gateway logs not found"
+            echo ""
+            echo "=== STUDENT SERVICE LOGS ==="
+            docker logs student-service --tail 50 || echo "Student Service logs not found"
