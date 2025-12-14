@@ -191,7 +191,10 @@ jobs:
             # Step A: Stop and remove old containers to ensure clean state
             docker-compose down || true
             
-            # Step B: Pull the Latest Images from Docker Hub
+            # Step B: Login to Docker Hub (Fix Rate Limit)
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+            # Step C: Pull the Latest Images from Docker Hub
             docker-compose pull
             
             # Step C: Start Services in Detached Mode (-d)
