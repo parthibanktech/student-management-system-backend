@@ -289,43 +289,40 @@ public class StudentService {
      * @param eventType The type of event (CREATED, UPDATED)
      * @param student   The student entity involved in the event
      */
-    // private void publishEvent(String eventType, Student student) {
-    // try {
-    // // Create the event object
-    // StudentEvent event = new StudentEvent(
-    // eventType,
-    // student.getId(),
-    // student.getEmail(),
-    // LocalDateTime.now().toString());
+    private void publishEvent(String eventType, Student student) {
+        try {
+            // Create the event object
+            StudentEvent event = new StudentEvent(
+                    eventType,
+                    student.getId(),
+                    student.getEmail(),
+                    LocalDateTime.now().toString());
 
-    // // Send the event to the Kafka topic
-    // kafkaTemplate.send(topicName, event);
-    // log.info("Published Kafka event: {} for studentId: {}", eventType,
-    // student.getId());
-    // } catch (Exception e) {
-    // // Log any errors that occur during publishing, but don't fail the
-    // transaction
-    // log.error("Error publishing Kafka event", e);
-    // }
-    // }
+            // Send the event to the Kafka topic
+            kafkaTemplate.send(topicName, event);
+            log.info("Published Kafka event: {} for studentId: {}", eventType, student.getId());
+        } catch (Exception e) {
+            // Log any errors that occur during publishing, but don't fail the transaction
+            log.error("Error publishing Kafka event", e);
+        }
+    }
 
-    // private void publishEvent(String eventType, Long studentId) {
-    // try {
-    // // Create the event object with null email
-    // StudentEvent event = new StudentEvent(
-    // eventType,
-    // studentId,
-    // null,
-    // LocalDateTime.now().toString());
+    private void publishEvent(String eventType, Long studentId) {
+        try {
+            // Create the event object with null email
+            StudentEvent event = new StudentEvent(
+                    eventType,
+                    studentId,
+                    null,
+                    LocalDateTime.now().toString());
 
-    // // Send the event to the Kafka topic
-    // kafkaTemplate.send(topicName, event);
-    // log.info("Published Kafka event: {} for studentId: {}", eventType,
-    // studentId);
-    // } catch (Exception e) {
-    // log.error("Error publishing Kafka event", e);
-    // }
-    // }
+            // Send the event to the Kafka topic
+            kafkaTemplate.send(topicName, event);
+            log.info("Published Kafka event: {} for studentId: {}", eventType, studentId);
+        } catch (Exception e) {
+            log.error("Error publishing Kafka event", e);
+        }
+    }
 
     public List<StudentDTO> addAllStudents(List<StudentDTO> studDTO) {
 
