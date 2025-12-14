@@ -29,3 +29,12 @@ jobs:
             echo ""
             echo "=== STUDENT SERVICE LOGS ==="
             docker logs student-service --tail 50 || echo "Student Service logs not found"
+            echo ""
+            echo "=== INTERNAL CONNECTIVITY CHECK ==="
+            echo "Checking Nginx (Host Port 80)..."
+            curl -v http://localhost:80 || echo "Nginx connection failed"
+            echo "Checking API Gateway (Host Port 4000)..."
+            curl -v http://localhost:4000/actuator/health || echo "API Gateway connection failed"
+            echo "Checking Discovery Service (Host Port 8761)..."
+            curl -v http://localhost:8761/actuator/health || echo "Discovery Service connection failed"
+
