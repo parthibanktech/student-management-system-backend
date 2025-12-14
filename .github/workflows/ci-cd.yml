@@ -125,6 +125,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # 0. Clean up Disk Space (Prevent 100% usage error)
+      - name: Clean up EC2 Disk Space
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            echo "Cleaning up Docker disk space..."
+            docker system prune -a -f || true
+            docker volume prune -f || true
+
       # 1. Copy Configuration Files to EC2
       # Uses SCP (Secure Copy) to transfer docker-compose.yml and nginx.conf
       - name: Copy docker-compose to EC2
