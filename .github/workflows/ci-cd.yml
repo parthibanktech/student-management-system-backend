@@ -137,6 +137,26 @@ jobs:
             docker system prune -a -f || true
             docker volume prune -f || true
 
+      # 0.1 Setup Swap Space (Critical for Low RAM EC2)
+      - name: Setup Swap Space
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            if [ ! -f /swapfile ]; then
+              echo "Creating 4GB swapfile..."
+              sudo fallocate -l 4G /swapfile
+              sudo chmod 600 /swapfile
+              sudo mkswap /swapfile
+              sudo swapon /swapfile
+              echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+            else
+              echo "Swapfile already exists."
+            fi
+            free -h
+
       # 1. Copy Configuration Files to EC2
       # Uses SCP (Secure Copy) to transfer docker-compose.yml and nginx.conf
       - name: Copy docker-compose to EC2
