@@ -292,6 +292,7 @@ public class StudentService {
     private void publishEvent(String eventType, Student student) {
         try {
             // Create the event object
+            log.debug("Attempting to publish event: {}", eventType);
             StudentEvent event = new StudentEvent(
                     eventType,
                     student.getId(),
