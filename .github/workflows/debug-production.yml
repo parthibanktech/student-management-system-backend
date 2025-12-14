@@ -1,7 +1,8 @@
 name: Debug Production EC2
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 jobs:
   debug:
