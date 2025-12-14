@@ -19,9 +19,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @author Student Management Team
  * @version 1.0.0
  */
-import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-
-@SpringBootApplication(exclude = KafkaAutoConfiguration.class)
+@SpringBootApplication
 @EnableDiscoveryClient
 @EnableAsync
 public class StudentManagementApplication {

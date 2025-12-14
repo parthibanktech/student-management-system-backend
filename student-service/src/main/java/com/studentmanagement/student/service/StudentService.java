@@ -48,12 +48,12 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
     // Kafka template for sending messages to Kafka topics
-    // private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     // The name of the Kafka topic to publish events to, injected from
     // application.properties/yml
-    // @Value("${spring.kafka.topic.student-events}")
-    // private String topicName;
+    @Value("${spring.kafka.topic.student-events}")
+    private String topicName;
 
     /**
      * Get all students
@@ -125,7 +125,7 @@ public class StudentService {
 
         // Publish a 'CREATED' event to Kafka so other services can react (e.g., send
         // welcome email)
-        // publishEvent("CREATED", savedStudent);
+        publishEvent("CREATED", savedStudent);
 
         // Convert the saved entity back to a DTO and return it
         return convertToDTO(savedStudent);
@@ -170,7 +170,7 @@ public class StudentService {
         log.info("Student updated successfully with id: {}", id); // Log success
 
         // Publish an 'UPDATED' event to Kafka
-        // publishEvent("UPDATED", updatedStudent);
+        publishEvent("UPDATED", updatedStudent);
 
         // Return the updated DTO
         return convertToDTO(updatedStudent);
@@ -198,7 +198,7 @@ public class StudentService {
         log.info("Student deleted successfully with id: {}", id); // Log success
 
         // Publish a 'DELETED' event to Kafka
-        // publishEvent("DELETED", id);
+        publishEvent("DELETED", id);
     }
 
     /**
@@ -336,7 +336,7 @@ public class StudentService {
 
         List<Student> s = studentRepository.saveAll(entities);
 
-        // s.forEach(s1 -> publishEvent("CREATED", s1));
+        s.forEach(s1 -> publishEvent("CREATED", s1));
 
         return s.stream().map(this::convertToDTO).toList();
 
