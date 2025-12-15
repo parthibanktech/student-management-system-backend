@@ -3,7 +3,10 @@ spring:
     activate:
       on-profile: prod
   server:
-    port: 0
+    port: 8081
+  eureka:
+    instance:
+      prefer-ip-address: true
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 eureka:
