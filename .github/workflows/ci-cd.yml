@@ -189,7 +189,8 @@ jobs:
             echo "Deployment started..."
             
             # Step A: Stop and remove old containers to ensure clean state
-            docker-compose down || true
+            # Step A: Stop and remove old containers AND VOLUMES (Reset DB)
+            docker-compose down -v || true
             
             # Step B: Login to Docker Hub (Fix Rate Limit)
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
