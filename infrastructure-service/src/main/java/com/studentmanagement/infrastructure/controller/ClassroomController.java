@@ -41,4 +41,9 @@ public class ClassroomController {
         classroomService.deleteClassroom(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Infrastructure Service is Healthy");
+    }
 }

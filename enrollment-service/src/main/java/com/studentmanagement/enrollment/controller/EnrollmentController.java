@@ -65,4 +65,9 @@ public class EnrollmentController {
         enrollmentService.retryEnrollment(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Enrollment Service is Healthy");
+    }
 }
