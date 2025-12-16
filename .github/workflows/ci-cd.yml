@@ -188,18 +188,32 @@ jobs:
             
             echo "Deployment started..."
             
-            # Step A: Stop and remove old containers to ensure clean state
-            # Step A: Stop and remove old containers AND VOLUMES (Reset DB)
-            docker-compose down -v || true
+            # Step 1: Verify File Transfer
+            echo "Listing directory contents:"
+            ls -la
+
+            # Step 2: Force Kill ALL Containers (Aggressive Cleanup)
+            echo "Force removing all containers..."
+            docker rm -f $(docker ps -aq) || true
             
-            # Step B: Login to Docker Hub (Fix Rate Limit)
+            # Step 3: Prune System to free space and remove conflicts
+            echo "Pruning system..."
+            docker system prune -af --volumes || true
+            
+            # Step 4: Login again just in case
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-            # Step C: Pull the Latest Images from Docker Hub
+            # Step 5: Pull Latest Images
+            echo "Pulling latest images..."
             docker-compose pull
-            
-            # Step C: Start Services in Detached Mode (-d)
-            # --remove-orphans cleans up any containers not defined in the compose file
+
+            # Step 6: Start Services
+            echo "Starting services..."
             docker-compose up -d --remove-orphans
+            
+            # Step 7: Verify Startup
+            echo "Waiting 10s for startup..."
+            sleep 10
+            docker ps -a
             
             echo "Deployment successful! Services are starting up."
