@@ -192,13 +192,14 @@ jobs:
             echo "Listing directory contents:"
             ls -la
 
-            # Step 2: Force Kill ALL Containers (Aggressive Cleanup)
-            echo "Force removing all containers..."
-            docker rm -f $(docker ps -aq) || true
+            # Step 2: Safe Shutdown (Preserve Data)
+            # We stop containers to free up RAM, but we DO NOT use -v (volumes)
+            echo "Stopping old containers..."
+            docker-compose down || true
             
-            # Step 3: Prune System to free space and remove conflicts
-            echo "Pruning system..."
-            docker system prune -af --volumes || true
+            # Step 3: Clean up unused Docker images (Save Disk Space, but keep Volumes)
+            echo "Pruning unused images..."
+            docker system prune -f || true
             
             # Step 4: Login again just in case
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
