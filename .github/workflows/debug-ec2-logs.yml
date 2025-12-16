@@ -39,6 +39,18 @@ jobs:
             echo "             STUDENT SERVICE LOGS"
             echo "======================================================="
             docker logs student-service --tail 50 || echo "Student Service not found"
+
+            echo ""
+            echo "======================================================="
+            echo "             ENROLLMENT SERVICE LOGS"
+            echo "======================================================="
+            docker logs enrollment-service --tail 50 || echo "Enrollment Service not found"
+
+            echo ""
+            echo "======================================================="
+            echo "             NOTIFICATION SERVICE LOGS"
+            echo "======================================================="
+            docker logs notification-service --tail 50 || echo "Notification Service not found"
             
             echo ""
             echo "======================================================="
