@@ -2,6 +2,9 @@ name: Debug Production EC2 Logs
 
 on: 
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/debug-ec2-logs.yml'
 
 jobs:
   debug-logs:
