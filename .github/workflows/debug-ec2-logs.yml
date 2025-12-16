@@ -57,3 +57,4 @@ jobs:
             echo "             POSTGRES LOGS (DB ERRORS?)"
             echo "======================================================="
             docker logs student-postgres --tail 50 || echo "Postgres not found"
+            # End of Logs
