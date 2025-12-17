@@ -10,18 +10,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 /**
- * Notification Listener Service
- * <p>
- * This service listens to Kafka topics for events from other microservices
- * (Student Service, Enrollment Service) and processes them to send
- * notifications.
- * </p>
- * <p>
- * This implementation uses JavaMailSender to send actual emails.
- * Ensure that the mail properties (host, port, username, password) are
- * correctly
- * configured in application.yml or via environment variables.
- * </p>
+ * ==========================================================================================================
+ * NOTIFICATION SERVICE - EVENT LISTENER
+ * ==========================================================================================================
+ * Listens to Kafka topics and triggers Email Notifications.
+ * 
+ * RESPONSIBILITIES:
+ * - Decouple core logic (Student/Enrollment) from Notification logic (Email).
+ * - Listen to 'student-events' (Welcome Email).
+ * - Listen to 'enrollment-events' (Confirmation Email).
  */
 @Service
 @RequiredArgsConstructor
@@ -31,13 +28,13 @@ public class NotificationListener {
     private final JavaMailSender mailSender;
 
     /**
-     * Kafka Listener for Student Events
+     * Handle Student Lifecycle Events.
      * <p>
-     * Listens to the 'student-events' topic.
-     * When a student is created, updated, or deleted, this method is triggered.
+     * Triggered when a new student is registered.
+     * Sends a Welcome Email.
      * </p>
-     *
-     * @param event The StudentEvent object received from Kafka
+     * 
+     * @param event Kafka payload containing student details.
      */
     @KafkaListener(topics = "${spring.kafka.topic.student-events}", groupId = "notification-group")
     public void handleStudentEvent(StudentEvent event) {
@@ -49,13 +46,13 @@ public class NotificationListener {
     }
 
     /**
-     * Kafka Listener for Enrollment Events
+     * Handle Enrollment Events.
      * <p>
-     * Listens to the 'enrollment-events' topic.
-     * When a student enrolls in a course, this method is triggered.
+     * Triggered when an enrollment is successfully CONFIRMED (end of Saga).
+     * Sends an Enrollment Confirmation Email.
      * </p>
-     *
-     * @param event The EnrollmentEvent object received from Kafka
+     * 
+     * @param event Kafka payload containing enrollment details.
      */
     @KafkaListener(topics = "${spring.kafka.topic.enrollment-events}", groupId = "notification-group")
     public void handleEnrollmentEvent(EnrollmentEvent event) {
