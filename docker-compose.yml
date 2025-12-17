@@ -58,7 +58,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_HEAP_OPTS: "-Xmx400M -Xms256M"
+      KAFKA_HEAP_OPTS: "-Xmx312M -Xms128M"
       KAFKA_JVM_PERFORMANCE_OPTS: "-XX:MetaspaceSize=96m -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:G1HeapRegionSize=16M -XX:MinMetaspaceFreeRatio=50 -XX:MaxMetaspaceFreeRatio=80"
     networks:
       - microservices-net
@@ -78,7 +78,7 @@ services:
     ports:
       - "8761:8761"
     environment:
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx300m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - microservices-net
     healthcheck:
@@ -99,7 +99,7 @@ services:
       - "4000:4000"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx400m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx300m"
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -127,7 +127,7 @@ services:
       DB_PASSWORD: password
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_STACKTRACE: always
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       postgres:
         condition: service_healthy
@@ -156,7 +156,7 @@ services:
       MAIL_PORT: ${MAIL_PORT}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       kafka:
         condition: service_healthy
@@ -183,7 +183,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       DB_USERNAME: postgres
       DB_PASSWORD: password
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       postgres:
         condition: service_healthy
@@ -205,15 +205,15 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://student-postgres:5432/student_db
-      SERVICES_STUDENT_URL: http://student-service:8080/api/v1
-      SERVICES_COURSE_URL: http://course-service:8082/api/v1
+      SERVICES_STUDENT_URL: http://student-service:8080
+      SERVICES_COURSE_URL: http://course-service:8082
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
       DB_USERNAME: postgres
       DB_PASSWORD: password
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       postgres:
         condition: service_healthy
@@ -245,7 +245,7 @@ services:
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: password
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       postgres:
         condition: service_healthy
@@ -274,7 +274,7 @@ services:
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: password
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       postgres:
         condition: service_healthy
@@ -301,7 +301,7 @@ services:
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: password
-      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx200m"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx180m"
     depends_on:
       postgres:
         condition: service_healthy
