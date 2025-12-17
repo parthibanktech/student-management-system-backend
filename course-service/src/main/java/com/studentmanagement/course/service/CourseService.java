@@ -28,7 +28,10 @@ import java.util.stream.Collectors;
 @Slf4j // Enables logging
 public class CourseService {
 
+    // Repository for database interactions (CRUD operations)
     private final CourseRepository courseRepository;
+
+    // Kafka Template for sending asynchronous messages to message broker
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     /**
@@ -36,6 +39,18 @@ public class CourseService {
      *
      * @param courseDTO Data for the new course
      * @return The created CourseDTO
+     */
+    /**
+     * Create a new course.
+     * <p>
+     * 1. Converts DTO to Entity.
+     * 2. Saves to PostgreSQL.
+     * 3. Returns the saved data as DTO.
+     * </p>
+     *
+     * @param courseDTO Data transfer object containing course details (title,
+     *                  capacity, etc.)
+     * @return CourseDTO The persisted course with generated ID.
      */
     @SuppressWarnings("null")
     public CourseDTO createCourse(CourseDTO courseDTO) {
@@ -94,9 +109,14 @@ public class CourseService {
     }
 
     /**
-     * Delete a course
+     * Delete a course.
+     * <p>
+     * Hard delete from the database.
+     * TODO: Check for active enrollments before deleting (Future Enhancement).
+     * </p>
      *
-     * @param id Course ID
+     * @param id The unique identifier of the course to delete.
+     * @throws ResourceNotFoundException if the course does not exist.
      */
     public void deleteCourse(Long id) {
         if (!courseRepository.existsById(id)) {

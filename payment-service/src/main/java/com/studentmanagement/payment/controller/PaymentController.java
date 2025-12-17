@@ -10,6 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * ==========================================================================================================
+ * PAYMENT CONTROLLER - REST API
+ * ==========================================================================================================
+ * Manages Payment Records.
+ * 
+ * NOTE: Most payment processing is simulated.
+ * The 'completePayment' endpoint mocks a successful transaction callback from a
+ * 3rd party provider (like Stripe).
+ */
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
@@ -39,6 +49,16 @@ public class PaymentController {
         return new ResponseEntity<>(paymentService.createPayment(payment), HttpStatus.CREATED);
     }
 
+    /**
+     * Complete Payment (Mock).
+     * <p>
+     * Simulates a user successfully entering credit card details.
+     * Updates status to PAID and trigger Saga Step 3 (via Service).
+     * </p>
+     * 
+     * @param id Payment ID.
+     * @return Updated Payment.
+     */
     @PostMapping("/{id}/complete")
     public ResponseEntity<Payment> completePayment(@PathVariable Long id) {
         logger.info("REST request to complete payment with id: {}", id);

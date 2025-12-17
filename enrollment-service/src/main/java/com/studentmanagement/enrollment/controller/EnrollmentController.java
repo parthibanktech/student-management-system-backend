@@ -11,6 +11,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * ==========================================================================================================
+ * ENROLLMENT CONTROLLER - REST API
+ * ==========================================================================================================
+ * The entry point for Student Enrollments.
+ * 
+ * CORE RESPONSIBILITY:
+ * - Orchestrates the start of the Enrollment Saga.
+ * - Bridges the Gap between Frontend interactions and the Event-Driven Backend.
+ * - Handles retries and manual overrides.
+ */
 @RestController
 @RequestMapping("/enrollments")
 public class EnrollmentController {
@@ -53,12 +64,33 @@ public class EnrollmentController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Confirm Enrollment (Manual Override).
+     * <p>
+     * Used by Admins to forcefully set an enrollment to CONFIRMED.
+     * Use with caution as it bypasses Sag checks.
+     * </p>
+     * 
+     * @param id Enrollment ID.
+     * @return Updated Enrollment.
+     */
     @PostMapping("/{id}/confirm")
     public ResponseEntity<EnrollmentResponse> confirmEnrollment(@PathVariable Long id) {
         logger.info("REST request to confirm enrollment payment: {}", id);
         return ResponseEntity.ok(enrollmentService.confirmEnrollment(id));
     }
 
+    /**
+     * Retry Enrollment Saga.
+     * <p>
+     * If an enrollment is stuck in PENDING due to a glitch (e.g., Payment Service
+     * was down),
+     * this endpoint re-publishes the 'enrollment-initiated' event to kickstart the
+     * process again.
+     * </p>
+     * 
+     * @param id Enrollment ID.
+     */
     @PostMapping("/{id}/retry")
     public ResponseEntity<Void> retryEnrollment(@PathVariable Long id) {
         logger.info("REST request to retry enrollment saga: {}", id);

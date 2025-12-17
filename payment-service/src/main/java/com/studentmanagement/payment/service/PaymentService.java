@@ -27,7 +27,10 @@ import java.util.List;
 @Slf4j
 public class PaymentService {
 
+    // Repository for Payment entity persistence
     private final PaymentRepository paymentRepository;
+
+    // Kafka Template for publishing 'payment-success' or 'payment-failed' events
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     /**
@@ -71,6 +74,22 @@ public class PaymentService {
      * </p>
      *
      * @param event The enrollment initiated event
+     */
+    /**
+     * SAGA STEP 2: Process Payment
+     * <p>
+     * Triggered specifically by the 'enrollment-initiated' Kafka event.
+     * This method acts as a mock Payment Gateway handler.
+     * 
+     * FLOW:
+     * 1. Receives enrollment request details.
+     * 2. Calculates fee (Fixed mock amount $100.00).
+     * 3. Creates a 'PENDING' payment record in PostgreSQL.
+     * 4. Logically pauses the Saga until the user manually invokes
+     * 'completePayment' (simulating user entering card details).
+     * </p>
+     *
+     * @param event The payload containing student_id, course_id, and enrollment_id.
      */
     @KafkaListener(topics = "enrollment-initiated", groupId = "payment-group")
     public void processPayment(EnrollmentInitiatedEvent event) {
