@@ -11,6 +11,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * ==========================================================================================================
+ * COURSE CONTROLLER - REST API
+ * ==========================================================================================================
+ * Manages the Course Catalog and Inventory (Seats).
+ * 
+ * CORE FEATURES:
+ * - CRUD for Courses (Title, Description, Capacity).
+ * - Real-time seat tracking (enrolledCount vs capacity).
+ *
+ * NOTE: Seat reservation logic is handled asynchronously via Kafka
+ * (CourseService.java),
+ * not directly through these REST endpoints.
+ */
 @RestController
 @RequestMapping("/courses")
 @RequiredArgsConstructor

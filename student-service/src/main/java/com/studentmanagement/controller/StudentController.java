@@ -12,14 +12,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * REST Controller for Student Management
- * Provides RESTful API endpoints for student operations
+ * ==========================================================================================================
+ * STUDENT CONTROLLER - REST API
+ * ==========================================================================================================
+ * This controller provides the external RESTful interface for the Student
+ * Service.
+ * It serves as the entry point for all student-related operations, including
+ * database management
+ * and search functionality.
+ *
+ * BASE PATH: /students
+ * PORT (Default): 8080 (Direct), 4000 (via Gateway)
  */
 @RestController
 @RequestMapping("/students")
 @RequiredArgsConstructor
 @Slf4j
-
 public class StudentController {
 
     private final StudentService studentService;
