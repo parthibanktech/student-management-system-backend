@@ -132,7 +132,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          timeout: 60m
+          timeout: 60s
+          command_timeout: 45m
           script: |
             echo "Cleaning up Docker disk space..."
             docker system prune -a -f || true
@@ -145,7 +146,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          timeout: 60m
+          timeout: 60s
+          command_timeout: 45m
           script: |
             if [ ! -f /swapfile ]; then
               echo "Creating 4GB swapfile..."
@@ -178,7 +180,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          timeout: 60m
+          timeout: 60s
+          command_timeout: 45m
           script: |
             cd /home/${{ secrets.EC2_USER }}/student-management-system
             
