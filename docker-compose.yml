@@ -1,15 +1,49 @@
-#git  =========================================================================================
-# DOCKER COMPOSE CONFIGURATION
 # =========================================================================================
-# This file defines the entire microservices architecture for the Student Management System.
-# It allows you to spin up all services, databases, and message brokers with a single command:
-#   docker-compose up -d
+# STUDENT MANAGEMENT SYSTEM - MICROSERVICES ARCHITECTURE
+# =========================================================================================
+# DOCKER COMPOSE CONFIGURATION
+# -----------------------------------------------------------------------------------------
+# This configuration orchestrates the entire deployment of the Student Management System.
+# It includes the Database, Message Broker, Backend Microservices, API Gateway, and Frontend.
 #
-# NETWORK:
-# All services are connected to a custom bridge network called 'microservices-net'.
-# This allows them to communicate using their service names (e.g., http://student-service:8080).
+# USAGE:
+#   Start all services:       docker-compose up -d
+#   Stop all services:        docker-compose down
+#   View logs:                docker-compose logs -f [service-name]
 #
+# SYSTEM REQUIREMENTS:
+#   - Docker Engine 20.10+
+#   - Docker Compose v2.0+
+#   - Minimum RAM: 4GB (Recommended 8GB)
+#   - Ports 80, 4000-4007, 5432, 9092, 2181 must be free.
+#
+# ARCHITECTURE OVERVIEW:
+#   1. CORE INFRASTRUCTURE:
+#      - Postgres (5432): Single database instance serving all microservices (logical separation).
+#      - Zookeeper & Kafka (2181, 9092): Handles event-driven communication (Saga pattern).
+#      - Discovery Service (8761): Eureka Server for service registration.
+#      - API Gateway (4000): Spring Cloud Gateway acting as the single entry point for Backend APIs.
+#
+#   2. MICROSERVICES:
+#      - Student Service (4001): Manages student data.
+#      - Course Service (4002): Manages courses and inventory.
+#      - Enrollment Service (4003): Saga Orchestrator for enrollments.
+#      - Payment Service (4004): Handles transactions.
+#      - Library & Infrastructure Services: Auxiliary modules.
+#
+#   3. FRONTEND & PROXY:
+#      - Frontend: Angular Application served via Nginx.
+#      - Nginx (80): Top-level Reverse Proxy/Load Balancer routing traffic to Frontend or Gateway.
+#
+# NETWORKING:
+#   All services communicate over a custom bridge network called 'microservices-net'.
+#   Internal communication uses service names (e.g., http://student-service:8080).
+# =========================================================================================
+
 services:
+  # =======================================================================================
+  # 1. CORE INFRASTRUCTURE SERVICES
+  # =======================================================================================
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine

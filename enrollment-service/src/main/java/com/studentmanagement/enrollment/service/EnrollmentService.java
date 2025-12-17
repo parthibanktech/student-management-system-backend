@@ -21,12 +21,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Enrollment Service Implementation
- * <p>
- * This service orchestrates the enrollment process using a Saga pattern.
- * It interacts with Student and Course services to validate data and uses Kafka
- * to coordinate distributed transactions (Payment, Seat Reservation).
- * </p>
+ * ==========================================================================================================
+ * ENROLLMENT SERVICE - SAGA ORCHESTRATOR
+ * ==========================================================================================================
+ * This service is the heart of the enrollment process. It implements the SAGA
+ * PATTERN to ensure data
+ * consistency across distributed microservices (Enrollment, Payment, Course)
+ * without using 2-Phase Commit.
+ *
+ * SAGA FLOW:
+ * 1. [INITIATION] User requests enrollment -> record created (PENDING) ->
+ * 'enrollment-initiated' event published.
+ * 2. [PAYMENT] Payment Service listens -> processes payment -> publishes
+ * 'payment-success' or 'payment-failed'.
+ * 3. [INVENTORY] Course Service listens -> reserves seat -> publishes
+ * 'seat-reserved' or 'seat-reservation-failed'.
+ * 4. [COMPLETION] Enrollment Service listens ->
+ * - IF 'seat-reserved': Updates status to CONFIRMED.
+ * - IF FAILURE: Updates status to CANCELLED (Compensating Transaction).
+ *
+ * @see com.studentmanagement.enrollment.kafka.EnrollmentProducer
  */
 @Service
 @RequiredArgsConstructor
